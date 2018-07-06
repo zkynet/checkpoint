@@ -87,77 +87,67 @@ var checkpointCmd = &cobra.Command{
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
 
-		checkPoint()
+		if checkPoint() {
+			fmt.Println("The point is inside the rectangle boundries")
+		} else {
+			fmt.Println("The point is outside the rectangle boundries")
+		}
 	},
 }
 
-func checkPoint() {
+func checkPoint() bool {
 	rect := Rect{
 		AX: bottomLeftx,
 		AY: bottomLefty,
+		BX: bottomLeftx,
+		BY: bottomLefty + height,
+		CX: bottomLeftx + width,
+		CY: bottomLefty + height,
+		DX: bottomLeftx + width,
+		DY: bottomLefty,
 	}
-	rect.BX = bottomLeftx
-	rect.BY = bottomLefty + height
-	rect.CX = bottomLeftx + width
-	rect.CY = bottomLefty + height
-	rect.DX = bottomLeftx + width
-	rect.DY = bottomLefty
 
 	point := Point{
 		X: x,
 		Y: y,
 	}
-	fmt.Println("Point:")
-	fmt.Println(point)
-	fmt.Println("Rectangle:")
-	fmt.Println(rect)
-	fmt.Println("height:", height)
-	fmt.Println("width:", width)
 
-	fmt.Println("Top Left X:", rect.BX)
-	fmt.Println("Top Left Y:", rect.BY)
-	fmt.Println("Bottom Left X:", rect.AX)
-	fmt.Println("Bottom Left Y:", rect.AY)
-
-	fmt.Println("Top Right X:", rect.CX)
-	fmt.Println("Top Right Y:", rect.CY)
-	fmt.Println("Bottom Right X:", rect.DX)
-	fmt.Println("Bottom Right Y:", rect.DY)
-
-	// calculate area
-	// (bottom left y - top right y ) * (bottom right x - top left x) + (top left y - bottom right y) * (bottom left x - top right x)
+	// Calculate the area of the original rectangle
 	rectArea := 0.5 * math.Abs(((rect.AY-rect.CY)*(rect.DX-rect.BX))+((rect.BY-rect.DY)*(rect.AX-rect.CX)))
-	fmt.Println(rectArea)
-
+	// Calculate a rectangle area using our new point
 	ABP := 0.5 * math.Abs((rect.AX*(rect.BY-point.Y) + rect.BX*(point.Y-rect.AY) + point.X*(rect.AY-rect.BY)))
-	fmt.Println(ABP)
 	BCP := 0.5 * math.Abs((rect.BX*(rect.CY-point.Y) + rect.CX*(point.Y-rect.BY) + point.X*(rect.BY-rect.CY)))
-	fmt.Println(BCP)
 	CDP := 0.5 * math.Abs((rect.CX*(rect.DY-point.Y) + rect.DX*(point.Y-rect.CY) + point.X*(rect.CY-rect.DY)))
-	fmt.Println(CDP)
 	DAP := 0.5 * math.Abs((rect.DX*(rect.AY-point.Y) + rect.AX*(point.Y-rect.DY) + point.X*(rect.DY-rect.AY)))
-	fmt.Println(DAP)
 
+	makeImage(&rect)
+
+	return rectArea == (ABP + BCP + CDP + DAP)
+
+}
+
+func makeImage(rect *Rect) {
+	// Draw the rectangle
 	img = image.NewRGBA(image.Rect(0, 0, round(rect.AX)+round(width)+10, round(rect.AY)+round(height)+10))
 	col = color.RGBA{0, 255, 0, 255} // Green
 	RectDraw(round(rect.AX), round(rect.AY), round(rect.CX), round(rect.CY))
+
+	// Draw the point
 	col = color.RGBA{255, 0, 0, 255} // Red
 	HLine(round(x), round(y), round(x)+5)
 	HLine(round(x)-5, round(y), round(x))
 	VLine(round(x), round(y), round(y)+5)
 	VLine(round(x), round(y)-5, round(y))
 
-	col = color.RGBA{255, 0, 255, 255} // Red
-	VLine(round(rect.AX), round(rect.AY), round(rect.AY))
-
+	// flip the image for a correct x/y axis
 	imgR := imaging.FlipV(img)
 	f, err := os.Create("draw.png")
 	if err != nil {
 		panic(err)
 	}
 	defer f.Close()
-	png.Encode(f, imgR)
 
+	png.Encode(f, imgR)
 }
 
 func round(num float64) int {
@@ -165,25 +155,11 @@ func round(num float64) int {
 }
 
 func init() {
-
 	checkpointCmd.Flags().Float64VarP(&bottomLeftx, "rect-bottom-left-x", "", 1, "Bottom Left point of the rectangle")
 	checkpointCmd.Flags().Float64VarP(&bottomLefty, "rect-bottom-left-y", "", 1, "Bottom Left point of the rectangle")
-
 	checkpointCmd.Flags().Float64VarP(&height, "rect-height", "H", 1, "Height of the tectangle")
 	checkpointCmd.Flags().Float64VarP(&width, "rect-width", "W", 1, "Width of the tectangle")
-
-	checkpointCmd.Flags().Float64VarP(&x, "point-X", "X", 1, "Point X")
-	checkpointCmd.Flags().Float64VarP(&y, "point-Y", "Y", 1, "Point Y")
-
+	checkpointCmd.Flags().Float64VarP(&x, "point-x", "X", 1, "Point X")
+	checkpointCmd.Flags().Float64VarP(&y, "point-y", "Y", 1, "Point Y")
 	rootCmd.AddCommand(checkpointCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// checkpointCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called direcBY, e.g.:
-	// checkpointCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
