@@ -1,5 +1,6 @@
 # Disclaimer
-In this project I wanted to showcase some image drawing
+In this project I wanted to showcase some image drawing.
+
 
 # References
 - https://en.wikipedia.org/wiki/Cartesian_coordinate_system
@@ -16,4 +17,6 @@ In this project I wanted to showcase some image drawing
 - an image showing the rectangle and where the point is
 
 # Rendered image
+![alt text](draw1.png)
+![alt text](draw2.png)
 ![alt text](draw.png)

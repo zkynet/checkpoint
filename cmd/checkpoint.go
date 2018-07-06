@@ -128,16 +128,16 @@ func checkPoint() bool {
 
 func makeImage(rect *Rect) {
 	// Draw the rectangle
-	img = image.NewRGBA(image.Rect(0, 0, round(rect.AX)+round(width)+10, round(rect.AY)+round(height)+10))
+	img = image.NewRGBA(image.Rect(0, 0, round(rect.AX)+round(width)+round(x)+100, round(rect.AY)+round(height)+round(y)+100))
 	col = color.RGBA{0, 255, 0, 255} // Green
-	RectDraw(round(rect.AX), round(rect.AY), round(rect.CX), round(rect.CY))
+	RectDraw(round(rect.AX)+100, round(rect.AY)+100, round(rect.CX)+100, round(rect.CY)+100)
 
 	// Draw the point
 	col = color.RGBA{255, 0, 0, 255} // Red
-	HLine(round(x), round(y), round(x)+5)
-	HLine(round(x)-5, round(y), round(x))
-	VLine(round(x), round(y), round(y)+5)
-	VLine(round(x), round(y)-5, round(y))
+	HLine(round(x)+100, round(y)+100, round(x)+105)
+	HLine(round(x)+95, round(y)+100, round(x)+100)
+	VLine(round(x)+100, round(y)+100, round(y)+105)
+	VLine(round(x)+100, round(y)+95, round(y)+100)
 
 	// flip the image for a correct x/y axis
 	imgR := imaging.FlipV(img)
