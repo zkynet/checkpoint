@@ -41,7 +41,7 @@ func checkPoint() bool {
 ```
 
 # Installation
-- go get github.com/zkynet/rectdist
+- go get github.com/zkynet/checkpoint
 
 # Usage
 - go run main.go checkpoint --rect-bottom-left-x 0 --rect-bottom-left-y 0 --rect-height 100 --rect-width 100 --point-x 50 --point-y 50
