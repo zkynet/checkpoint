@@ -22,6 +22,7 @@ import (
 	"math"
 	"os"
 
+	"github.com/disintegration/imaging"
 	"github.com/spf13/cobra"
 )
 
@@ -53,16 +54,21 @@ func RectDraw(x1, y1, x2, y2 int) {
 type Rect struct {
 
 	// left side
-	BLX float64
-	BLY float64
-	TLX float64
-	TLY float64
+	AX float64
+	AY float64
+	BX float64
+	BY float64
 
 	// right side
-	BRX float64
-	BRY float64
-	TRX float64
-	TRY float64
+	DX float64
+	DY float64
+	CX float64
+	CY float64
+}
+
+type Point struct {
+	X float64
+	Y float64
 }
 
 var bottomLeftx float64
@@ -86,46 +92,71 @@ var checkpointCmd = &cobra.Command{
 }
 
 func checkPoint() {
-	rect := &Rect{
-		BLX: bottomLeftx,
-		BLY: bottomLefty,
+	rect := Rect{
+		AX: bottomLeftx,
+		AY: bottomLefty,
 	}
-	rect.TLX = bottomLeftx
-	rect.TLY = bottomLefty + height
+	rect.BX = bottomLeftx
+	rect.BY = bottomLefty + height
+	rect.CX = bottomLeftx + width
+	rect.CY = bottomLefty + height
+	rect.DX = bottomLeftx + width
+	rect.DY = bottomLefty
 
-	rect.TRX = bottomLeftx + width
-	rect.TRY = bottomLefty + height
-
-	rect.BRX = bottomLeftx + width
-	rect.BRY = bottomLefty
-
-	fmt.Println("Rectangle")
+	point := Point{
+		X: x,
+		Y: y,
+	}
+	fmt.Println("Point:")
+	fmt.Println(point)
+	fmt.Println("Rectangle:")
 	fmt.Println(rect)
-	fmt.Println("Top Left X:", rect.TLX)
-	fmt.Println("Top Left Y:", rect.TLY)
-	fmt.Println("Bottom Left X:", rect.BLX)
-	fmt.Println("Bottom Left Y:", rect.BLY)
+	fmt.Println("height:", height)
+	fmt.Println("width:", width)
 
-	fmt.Println("Top Right X:", rect.TRX)
-	fmt.Println("Top Right Y:", rect.TRY)
-	fmt.Println("Bottom Right X:", rect.BRX)
-	fmt.Println("Bottom Right Y:", rect.BRY)
+	fmt.Println("Top Left X:", rect.BX)
+	fmt.Println("Top Left Y:", rect.BY)
+	fmt.Println("Bottom Left X:", rect.AX)
+	fmt.Println("Bottom Left Y:", rect.AY)
 
-	img = image.NewRGBA(image.Rect(0, 0, 50, 50))
+	fmt.Println("Top Right X:", rect.CX)
+	fmt.Println("Top Right Y:", rect.CY)
+	fmt.Println("Bottom Right X:", rect.DX)
+	fmt.Println("Bottom Right Y:", rect.DY)
 
-	//col = color.RGBA{255, 0, 0, 255} // Red
-	//RectDraw(15, 15, 20, 20)
+	// calculate area
+	// (bottom left y - top right y ) * (bottom right x - top left x) + (top left y - bottom right y) * (bottom left x - top right x)
+	rectArea := 0.5 * math.Abs(((rect.AY-rect.CY)*(rect.DX-rect.BX))+((rect.BY-rect.DY)*(rect.AX-rect.CX)))
+	fmt.Println(rectArea)
+
+	ABP := 0.5 * math.Abs((rect.AX*(rect.BY-point.Y) + rect.BX*(point.Y-rect.AY) + point.X*(rect.AY-rect.BY)))
+	fmt.Println(ABP)
+	BCP := 0.5 * math.Abs((rect.BX*(rect.CY-point.Y) + rect.CX*(point.Y-rect.BY) + point.X*(rect.BY-rect.CY)))
+	fmt.Println(BCP)
+	CDP := 0.5 * math.Abs((rect.CX*(rect.DY-point.Y) + rect.DX*(point.Y-rect.CY) + point.X*(rect.CY-rect.DY)))
+	fmt.Println(CDP)
+	DAP := 0.5 * math.Abs((rect.DX*(rect.AY-point.Y) + rect.AX*(point.Y-rect.DY) + point.X*(rect.DY-rect.AY)))
+	fmt.Println(DAP)
+
+	img = image.NewRGBA(image.Rect(0, 0, round(rect.AX)+round(width)+10, round(rect.AY)+round(height)+10))
 	col = color.RGBA{0, 255, 0, 255} // Green
-	RectDraw(round(rect.BLX), round(rect.BLY), round(rect.TRX), round(rect.TRY))
+	RectDraw(round(rect.AX), round(rect.AY), round(rect.CX), round(rect.CY))
 	col = color.RGBA{255, 0, 0, 255} // Red
-	RectDraw(round(x), round(y), round(x), round(y))
+	HLine(round(x), round(y), round(x)+5)
+	HLine(round(x)-5, round(y), round(x))
+	VLine(round(x), round(y), round(y)+5)
+	VLine(round(x), round(y)-5, round(y))
 
+	col = color.RGBA{255, 0, 255, 255} // Red
+	VLine(round(rect.AX), round(rect.AY), round(rect.AY))
+
+	imgR := imaging.FlipV(img)
 	f, err := os.Create("draw.png")
 	if err != nil {
 		panic(err)
 	}
 	defer f.Close()
-	png.Encode(f, img)
+	png.Encode(f, imgR)
 
 }
 
@@ -153,6 +184,6 @@ func init() {
 	// checkpointCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
+	// is called direcBY, e.g.:
 	// checkpointCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
