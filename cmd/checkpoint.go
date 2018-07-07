@@ -1,17 +1,3 @@
-// Copyright © 2018 NAME HERE <EMAIL ADDRESS>
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package cmd
 
 import (
@@ -133,10 +119,10 @@ func checkPoint() bool {
 	}
 
 	return rectArea == (ABP + BCP + CDP + DAP)
-
 }
 
 func makeImage(rect *Rect) {
+
 	// Draw the rectangle
 	img = image.NewRGBA(image.Rect(0, 0, round(rect.AX)+round(width)+round(x)+100, round(rect.AY)+round(height)+round(y)+100))
 	col = color.RGBA{0, 255, 0, 255} // Green
@@ -173,6 +159,5 @@ func init() {
 	checkpointCmd.Flags().Float64VarP(&y, "point-y", "Y", 1, "Point Y")
 	checkpointCmd.Flags().StringVarP(&imageOut, "img-out", "i", "", "Output Image Path, if no image is specified the program will not make an image")
 	checkpointCmd.Flags().BoolVarP(&boolOnly, "bool-out", "b", false, "Output bool instead of a message")
-
 	rootCmd.AddCommand(checkpointCmd)
 }
