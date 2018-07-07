@@ -1,16 +1,30 @@
 # Disclaimer
-In this project I wanted to showcase some image drawing.
-
+In this project I wanted to showcase some image drawing and cli tool building.<br><br>
+If you build this programm you have a binary called "xy". You can place that in your path and run:
+```
+$ xy checkpoint --help
+```
 
 # Installation
-- go get github.com/zkynet/checkpoint
+- go get github.com/zkynet/xy
 
 # Test 
 no tests dues to time limit .. maybe I'll add some later.
 
-# Usage
-- go run main.go checkpoint --rect-bottom-left-x 0 --rect-bottom-left-y 0 --rect-height 100 --rect-width 100 --point-x 50 --point-y 50 --img-out ~/rect-vs-point.png
+# Help
+```
+$ go run main.go checkpoint  --help
+```
 
+# Usage without building
+ ```
+ $ go run main.go checkpoint --rect-bottom-left-x 0 --rect-bottom-left-y 0 --rect-height 100 --rect-width 100 --point-x 50 --point-y 50 --img-out 1.png --bool-out
+ ```
+
+# Usage after building
+```
+$ xy checkpoint --rect-bottom-left-x 0 --rect-bottom-left-y 0 --rect-height 100 --rect-width 100 --point-x 50 --point-y 50 --img-out 1.png --bool-out
+```
 
 # References
 - https://en.wikipedia.org/wiki/Cartesian_coordinate_system
@@ -53,8 +67,8 @@ func checkPoint() bool {
 
 
 # Results
-- a message indicating if the point is inside or outside of the rectangle
-- an image showing the rectangle and where the point is
+- a message or boolean indicating if the point is inside or outside of the rectangle
+- optional image showing the rectangle and where the point is
 
 # Rendered image
 ![alt text](draw1.png) ![alt text](draw.png)  ![alt text](draw2.png)

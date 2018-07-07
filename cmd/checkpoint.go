@@ -81,6 +81,7 @@ var x float64
 var y float64
 
 var imageOut string
+var boolOnly bool
 
 // checkpointCmd represents the checkrect command
 var checkpointCmd = &cobra.Command{
@@ -89,11 +90,16 @@ var checkpointCmd = &cobra.Command{
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
 
-		if checkPoint() {
-			fmt.Println("The point is inside the rectangle boundries")
+		if boolOnly {
+			fmt.Println(checkPoint())
 		} else {
-			fmt.Println("The point is outside the rectangle boundries")
+			if checkPoint() {
+				fmt.Println("The point is inside the rectangle boundries")
+			} else {
+				fmt.Println("The point is outside the rectangle boundries")
+			}
 		}
+
 	},
 }
 
@@ -122,7 +128,9 @@ func checkPoint() bool {
 	CDP := 0.5 * math.Abs((rect.CX*(rect.DY-point.Y) + rect.DX*(point.Y-rect.CY) + point.X*(rect.CY-rect.DY)))
 	DAP := 0.5 * math.Abs((rect.DX*(rect.AY-point.Y) + rect.AX*(point.Y-rect.DY) + point.X*(rect.DY-rect.AY)))
 
-	makeImage(&rect)
+	if imageOut != "" {
+		makeImage(&rect)
+	}
 
 	return rectArea == (ABP + BCP + CDP + DAP)
 
@@ -157,13 +165,14 @@ func round(num float64) int {
 }
 
 func init() {
-	checkpointCmd.Flags().Float64VarP(&bottomLeftx, "rect-bottom-left-x", "", 1, "Bottom Left point of the rectangle")
-	checkpointCmd.Flags().Float64VarP(&bottomLefty, "rect-bottom-left-y", "", 1, "Bottom Left point of the rectangle")
+	checkpointCmd.Flags().Float64VarP(&bottomLeftx, "rect-bottom-left-x", "", 1, "Bottom Left X point of the rectangle")
+	checkpointCmd.Flags().Float64VarP(&bottomLefty, "rect-bottom-left-y", "", 1, "Bottom Left Y point of the rectangle")
 	checkpointCmd.Flags().Float64VarP(&height, "rect-height", "H", 1, "Height of the tectangle")
 	checkpointCmd.Flags().Float64VarP(&width, "rect-width", "W", 1, "Width of the tectangle")
 	checkpointCmd.Flags().Float64VarP(&x, "point-x", "X", 1, "Point X")
 	checkpointCmd.Flags().Float64VarP(&y, "point-y", "Y", 1, "Point Y")
-	checkpointCmd.Flags().StringVarP(&imageOut, "img-out", "i", "draw.png", "Output Image Path")
+	checkpointCmd.Flags().StringVarP(&imageOut, "img-out", "i", "", "Output Image Path, if no image is specified the program will not make an image")
+	checkpointCmd.Flags().BoolVarP(&boolOnly, "bool-out", "b", false, "Output bool instead of a message")
 
 	rootCmd.AddCommand(checkpointCmd)
 }
