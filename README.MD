@@ -18,12 +18,12 @@ $ go run main.go checkpoint  --help
 
 # Usage without building
  ```
- $ go run main.go checkpoint --rect-bottom-left-x 0 --rect-bottom-left-y 0 --rect-height 100 --rect-width 100 --point-x 50 --point-y 50 --img-out 1.png --bool-out
+ $ go run main.go checkpoint --rect-bottom-left-x 0 --rect-bottom-left-y 0 --rect-height 100 --rect-width 100 --point-x 50 --point-y 50 --img-out ~/rect-vs-point.png --bool-out
  ```
 
 # Usage after building
 ```
-$ xy checkpoint --rect-bottom-left-x 0 --rect-bottom-left-y 0 --rect-height 100 --rect-width 100 --point-x 50 --point-y 50 --img-out 1.png --bool-out
+$ xy checkpoint --rect-bottom-left-x 0 --rect-bottom-left-y 0 --rect-height 100 --rect-width 100 --point-x 50 --point-y 50 --img-out ~/rect-vs-point.png --bool-out
 ```
 
 # References
