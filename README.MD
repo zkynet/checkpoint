@@ -8,6 +8,10 @@ In this project I wanted to showcase some image drawing.
 # Test 
 no tests dues to time limit .. maybe I'll add some later.
 
+# Usage
+- go run main.go checkpoint --rect-bottom-left-x 0 --rect-bottom-left-y 0 --rect-height 100 --rect-width 100 --point-x 50 --point-y 50 --img-out ~/rect-vs-point.png
+
+
 # References
 - https://en.wikipedia.org/wiki/Cartesian_coordinate_system
 - https://martin-thoma.com/how-to-check-if-a-point-is-inside-a-rectangle/
@@ -47,8 +51,6 @@ func checkPoint() bool {
 ```
 
 
-# Usage
-- go run main.go checkpoint --rect-bottom-left-x 0 --rect-bottom-left-y 0 --rect-height 100 --rect-width 100 --point-x 50 --point-y 50 --img-out ~/rect-vs-point.png
 
 # Results
 - a message indicating if the point is inside or outside of the rectangle
