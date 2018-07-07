@@ -80,6 +80,8 @@ var width float64
 var x float64
 var y float64
 
+var imageOut string
+
 // checkpointCmd represents the checkrect command
 var checkpointCmd = &cobra.Command{
 	Use:   "checkpoint",
@@ -141,7 +143,7 @@ func makeImage(rect *Rect) {
 
 	// flip the image for a correct x/y axis
 	imgR := imaging.FlipV(img)
-	f, err := os.Create("draw.png")
+	f, err := os.Create(imageOut)
 	if err != nil {
 		panic(err)
 	}
@@ -161,5 +163,7 @@ func init() {
 	checkpointCmd.Flags().Float64VarP(&width, "rect-width", "W", 1, "Width of the tectangle")
 	checkpointCmd.Flags().Float64VarP(&x, "point-x", "X", 1, "Point X")
 	checkpointCmd.Flags().Float64VarP(&y, "point-y", "Y", 1, "Point Y")
+	checkpointCmd.Flags().StringVarP(&imageOut, "img-out", "i", "draw.png", "Output Image Path")
+
 	rootCmd.AddCommand(checkpointCmd)
 }

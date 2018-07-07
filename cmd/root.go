@@ -27,7 +27,7 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "rectdist",
+	Use:   "xy",
 	Short: "This application is used to opperate on x,y cordinates",
 	Long:  ``,
 	// Uncomment the following line if your bare application
